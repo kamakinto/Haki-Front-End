@@ -104,6 +104,15 @@ var userLocation;
 
 
 function initMap() {
+    //check for a user id
+    
+    if (isWatchMyBackClient()){
+        document.getElementById("uuid").innerHTML = "This is a client: " +
+            getClientUuid() + " using Watch My Back";
+    } else {
+        document.getElementById("uuid").innerHTML = "This is a Client in Admin View";
+    }
+
     //get users location
     if(navigator.geolocation){
         navigator.geolocation.getCurrentPosition(function (p){
@@ -224,7 +233,7 @@ var geoQuery = geoFire.query({
         USER ENTERED RANGE
  */
 geoQuery.on("key_entered", function(userId, userLocation){
-//get vehicle details
+//get user details
     userId = userId;
     usersInQuery[userId] = true;
 
@@ -304,6 +313,30 @@ function createUserMarker(user){
 function coordinatesAreEquivalent(coord1, coord2) {
     return (Math.abs(coord1 - coord2) < 0.000001);
 }
+
+/* Returns True if page is for Watch my back (ie: has a uuid attached to it) */
+
+function isWatchMyBackClient(){
+    //check for a uuid in the header
+    var query = window.location.search;
+
+    if (query.indexOf("?") !== -1){
+        return true;
+    }
+    return false;
+}
+
+function getClientUuid(){
+   var uuid = "";
+   var queryUrl =  window.location.search;
+
+    //decript the URL string to get the user's uuid
+    uuid = queryUrl.slice(1);
+
+
+    return uuid;
+}
+
 
 
 
